@@ -69,6 +69,15 @@ public final class JCAConstants {
     /** processor. */
     public static final String PROCESSOR = "processor";
 
+    /** batch commit. */
+    public static final String BATCH_COMMIT = "batchCommit";
+    /** delay limit. */
+    public static final String BATCH_TIMEOUT = "batchTimeout";
+    /** batch size. */
+    public static final String BATCH_SIZE = "batchSize";
+    /** reaper polling period. */
+    public static final String REAPER_POLLING_PERIOD = "reaperPollingPeriod";
+    
     /** property. */
     public static final String PROPERTY = "property";
     /** name. */
