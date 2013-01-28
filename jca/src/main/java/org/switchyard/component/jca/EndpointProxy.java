@@ -71,7 +71,6 @@ public class EndpointProxy implements InvocationHandler, MessageEndpoint {
     private static ThreadLocal<BatchTransactionHelper> _batchHelper = new ThreadLocal<BatchTransactionHelper>();
         
     private ReentrantLock _deliveryThreadLock = new ReentrantLock();
-    private ReentrantLock _reaperThreadLock = new ReentrantLock();
     private ScheduledExecutorService _scheduler = Executors.newScheduledThreadPool(1);
 
     /**
@@ -220,16 +219,15 @@ public class EndpointProxy implements InvocationHandler, MessageEndpoint {
             return;
         }
         
-        if (!_deliveryThreadLock.tryLock()) {
+        if (_inUseThread != null && !_inUseThread.equals(Thread.currentThread())) {
             throw new IllegalStateException("This message endpoint + " + _delegate + " is already in use by another thread " + _inUseThread);
         }
-        _reaperThreadLock.lock();
+        _deliveryThreadLock.lock();
         _inUseThread = Thread.currentThread();
     }
 
     private void releaseThreadLock() {
         _inUseThread = null;
-        _reaperThreadLock.unlock();
         _deliveryThreadLock.unlock();
     }
     
@@ -395,7 +393,7 @@ public class EndpointProxy implements InvocationHandler, MessageEndpoint {
         }
         
          public void run() {
-             _reaperThreadLock.lock();
+             _deliveryThreadLock.lock();
              try {
                  if (_transaction.getStatus() == Status.STATUS_ACTIVE) {
                      _transactionManager.resume(_transaction);
@@ -406,7 +404,7 @@ public class EndpointProxy implements InvocationHandler, MessageEndpoint {
              } catch (Exception e) {
                      _logger.error("Failed to commit expiring transaction", e);
              } finally {
-                 _reaperThreadLock.unlock();
+                 _deliveryThreadLock.unlock();
              }
          }
     }
