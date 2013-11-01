@@ -18,6 +18,7 @@ import javax.transaction.UserTransaction;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.switchyard.test.BeforeDeploy;
@@ -36,6 +37,7 @@ import org.switchyard.component.test.mixins.jca.ResourceAdapterConfig;
  */
 @RunWith(SwitchYardRunner.class)
 @SwitchYardTestCaseConfig(config = "switchyard-outbound-jms-camel-test.xml", mixins = {CDIMixIn.class, HornetQMixIn.class, JCAMixIn.class})
+@Ignore
 public class JCAJMSReferenceBindingCamelTest  {
     
     private static final String OUTPUT_QUEUE = "TestQueue";

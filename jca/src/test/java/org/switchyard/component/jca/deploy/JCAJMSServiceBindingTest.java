@@ -17,18 +17,19 @@ import javax.jms.MessageProducer;
 import javax.jms.TextMessage;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.switchyard.Context;
 import org.switchyard.Exchange;
 import org.switchyard.HandlerException;
+import org.switchyard.Property;
 import org.switchyard.component.common.label.PropertyLabel;
 import org.switchyard.component.jca.composer.JMSContextMapper;
 import org.switchyard.component.test.mixins.cdi.CDIMixIn;
 import org.switchyard.component.test.mixins.hornetq.HornetQMixIn;
 import org.switchyard.component.test.mixins.jca.JCAMixIn;
 import org.switchyard.component.test.mixins.jca.ResourceAdapterConfig;
-import org.switchyard.Property;
 import org.switchyard.test.BeforeDeploy;
 import org.switchyard.test.MockHandler;
 import org.switchyard.test.SwitchYardRunner;
@@ -43,6 +44,7 @@ import org.switchyard.test.SwitchYardTestKit;
  */
 @RunWith(SwitchYardRunner.class)
 @SwitchYardTestCaseConfig(config = "switchyard-inbound-jms-test.xml", mixins = {JCAMixIn.class, HornetQMixIn.class, CDIMixIn.class})
+@Ignore
 public class JCAJMSServiceBindingTest  {
     
     private static final String INPUT_QUEUE = "TestQueue";

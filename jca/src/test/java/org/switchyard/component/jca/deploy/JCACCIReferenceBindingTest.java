@@ -22,6 +22,7 @@ import javax.resource.cci.MappedRecord;
 import javax.resource.cci.Record;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.switchyard.component.test.mixins.cdi.CDIMixIn;
@@ -44,6 +45,7 @@ import org.switchyard.test.SwitchYardTestCaseConfig;
  */
 @RunWith(SwitchYardRunner.class)
 @SwitchYardTestCaseConfig(config = "switchyard-outbound-cci-test.xml", mixins = {JCAMixIn.class, CDIMixIn.class})
+@Ignore
 public class JCACCIReferenceBindingTest  {
     
     private static final String JNDI_CONNECTION_FACTORY = "java:jboss/MyEISConnectionFactory";

@@ -275,6 +275,9 @@ public abstract class V1CamelNettyBindingModel extends V1BaseCamelBindingModel
 
         QueryString queryStr = new QueryString();
         traverseConfiguration(children, queryStr, HOST, PORT);
+        if (queryStr.toString().contains("ssl")) {
+            queryStr.add("needClientAuth", "true");
+        }
 
         return URI.create(baseUri + queryStr.toString());
     }

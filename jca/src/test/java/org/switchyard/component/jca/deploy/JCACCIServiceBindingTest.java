@@ -18,6 +18,7 @@ import javax.resource.cci.Record;
 import javax.resource.cci.RecordFactory;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.switchyard.component.test.mixins.cdi.CDIMixIn;
@@ -39,6 +40,7 @@ import org.switchyard.test.SwitchYardTestKit;
  */
 @RunWith(SwitchYardRunner.class)
 @SwitchYardTestCaseConfig(config = "switchyard-inbound-cci-test.xml", mixins = {JCAMixIn.class, CDIMixIn.class})
+@Ignore
 public class JCACCIServiceBindingTest  {
     
     private static final String ADAPTER_NAME = "myeis-ra.rar";
