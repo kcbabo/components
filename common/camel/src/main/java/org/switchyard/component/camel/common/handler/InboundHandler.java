@@ -17,6 +17,7 @@ import java.net.URI;
 
 import javax.xml.namespace.QName;
 
+import org.apache.camel.Processor;
 import org.apache.camel.model.RouteDefinition;
 import org.switchyard.Exchange;
 import org.switchyard.ServiceDomain;
@@ -48,6 +49,7 @@ public class InboundHandler<T extends CamelBindingModel> extends BaseServiceHand
     private final T _camelBindingModel;
     private final SwitchYardCamelContext _camelContext;
     private final QName _serviceName;
+    private final ServiceDomain _serviceDomain;
 
     /**
      * Sole constructor.
@@ -59,6 +61,7 @@ public class InboundHandler<T extends CamelBindingModel> extends BaseServiceHand
      */
     public InboundHandler(final T camelBindingModel, final SwitchYardCamelContext camelContext, final QName serviceName, final ServiceDomain domain) {
         super(domain);
+        _serviceDomain = domain;
         _camelBindingModel = camelBindingModel;
         _camelContext = camelContext;
         _serviceName = serviceName;
@@ -76,13 +79,22 @@ public class InboundHandler<T extends CamelBindingModel> extends BaseServiceHand
      * @return Route definition handling given binding.
      */
     protected RouteDefinition createRouteDefinition() {
+    	Processor namespaceProcessor = null;
+    	if (_serviceDomain != null) {
+    		namespaceProcessor = (Processor)_serviceDomain.getProperty("NamespaceContextProcessor");
+    	}
         final RouteDefinition route = new RouteDefinition();
-
-        route.routeId(getRouteId()).from(getComponentUri().toString())
-            .setProperty(ExchangeCompletionEvent.GATEWAY_NAME).simple(getBindingModel().getName(), String.class)
-            .setProperty(CamelConstants.APPLICATION_NAMESPACE).constant(_serviceName.getNamespaceURI())
-            .process(new MessageComposerProcessor(getBindingModel()))
-            .process(new OperationSelectorProcessor(getServiceName(), getBindingModel()));
+        route.routeId(getRouteId()).from(getComponentUri().toString());
+        if (namespaceProcessor != null) {
+        	route.process(namespaceProcessor);
+        }
+        route.setProperty(ExchangeCompletionEvent.GATEWAY_NAME).simple(getBindingModel().getName(), String.class)
+        .setProperty(CamelConstants.APPLICATION_NAMESPACE).constant(_serviceName.getNamespaceURI())
+        .process(new MessageComposerProcessor(getBindingModel()))
+        .process(new OperationSelectorProcessor(getServiceName(), getBindingModel()));
+        if (namespaceProcessor != null) {
+        	route.process(namespaceProcessor);
+        }
         return addTransactionPolicy(route);
     }
 
